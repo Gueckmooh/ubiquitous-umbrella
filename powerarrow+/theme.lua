@@ -1,25 +1,25 @@
-local awful = require ("awful")
-local wibox = require ("wibox")
-local gears = require ("gears")
-local naughty = require ("naughty")
-local layout = require ("config.layout")
-local menu  = require ("config.menu")
-local util = require ("config.util")
-local xresources      = require("beautiful.xresources")
-local dpi             = xresources.apply_dpi
-local lain            = require ("lain")
-local markup          = lain.util.markup
-local separators      = lain.util.separators
-local arrow           = separators.arrow_left
-local client          = client
-local vars            = require ("config.vars")
+local awful      = require ("awful")
+local wibox      = require ("wibox")
+local gears      = require ("gears")
+local naughty    = require ("naughty")
+local layout     = require ("config.layout")
+local menu       = require ("config.menu")
+local util       = require ("config.util")
+local xresources = require("beautiful.xresources")
+local dpi        = xresources.apply_dpi
+local lain       = require ("lain")
+local markup     = lain.util.markup
+local separators = lain.util.separators
+local arrow      = separators.arrow_left
+local client     = client
+local vars       = require ("config.vars")
 
 local theme = {}
 
 
 -- Default variables
-theme.name = "powerarrow"
-theme.dir = os.getenv ("HOME") .. "/.config/awesome/themes/" .. theme.name
+theme.name = "powerarrow+"
+theme.dir = os.getenv ("HOME") .. "/.config/awesome/ubiquitous/" .. theme.name
 -- theme.dir = "/home/brignone/git/yet-another-awesome-config/themes/" .. theme.name -- CONFIG
 theme.font = "xos4 Terminus 9"
 theme.wallpaper_dir = theme.dir .. "/wallpapers"
