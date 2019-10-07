@@ -18,12 +18,12 @@ local theme = {}
 
 
 -- Default variables
-theme.name = "powerarrow+"
+theme.name = "new-theme"
 theme.dir = os.getenv ("HOME") .. "/.config/awesome/ubiquitous/" .. theme.name
 -- theme.dir = "/home/brignone/git/yet-another-awesome-config/themes/" .. theme.name -- CONFIG
-theme.font = "xos4 Terminus 9"
+theme.font = "xos4 Terminus 11"
 theme.wallpaper_dir = theme.dir .. "/wallpapers"
-theme.wallpaper = util.get_wall(theme.dir .. "/wallpapers")
+theme.wallpaper = theme.wallpaper_dir .. "/warmlandscape.jpg"
 
 -- {{{ Table of layouts to cover with awful.layout.inc, order matters.
 theme.layouts = {
@@ -499,7 +499,7 @@ theme.max_useless_gap                           = 7
 -- theme.wibar_opacity = nil
 -- theme.wibar_type = nil
 -- theme.wibar_width = nil
--- theme.wibar_height = nil
+theme.wibar_height = 20
 -- theme.wibar_bg = nil
 -- theme.wibar_bgimage = nil
 -- theme.wibar_fg = nil
