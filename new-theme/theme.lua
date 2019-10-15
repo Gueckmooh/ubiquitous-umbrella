@@ -9,8 +9,9 @@ local xresources = require("beautiful.xresources")
 local dpi        = xresources.apply_dpi
 local lain       = require ("lain")
 local markup     = lain.util.markup
-local separators = lain.util.separators
-local arrow      = separators.arrow_left
+-- local separators = lain.util.separators
+-- local arrow      = separators.arrow_left
+local separators = require ("cuddly.util.separators")
 local client     = client
 local vars       = require ("config.vars")
 
@@ -67,15 +68,16 @@ awful.layout.layouts = theme.layouts
 theme.awesome_icon                              = theme.dir .. "/icons/awesome.png"
 
 -- bg\
-theme.bg_normal   = "#222222"
-theme.bg_focus    = "#1E2320"
+-- theme.bg_normal   = "#222222"
+theme.bg_normal   = "#2E3436"
+theme.bg_focus    = "#2E3436"
 theme.bg_urgent   = "#3F3F3F"
--- theme.bg_minimize = nil
+theme.bg_minimize = "#2E343688"
 theme.bg_systray  = "#343434"
 
 -- fg\
 theme.fg_normal   = "#FEFEFE"
-theme.fg_focus    = "#32D6FF"
+theme.fg_focus    = "#FEFEFE"
 theme.fg_urgent   = "#C83F11"
 theme.fg_minimize = "#888888"
 
@@ -292,9 +294,9 @@ theme.taglist_fg_focus    = "#00CCFF"
 -- theme.taglist_spacing = nil
 -- theme.taglist_disable_icon = nil
 
-theme.taglist_squares_sel                       = theme.dir .. "/icons/square_sel.png"
-theme.taglist_squares_unsel                     = theme.dir .. "/icons/square_unsel.png"
--- theme.taglist_squares_sel_empty = nil
+theme.taglist_squares_sel                       = theme.dir .. "/icons/new_square_sel.png"
+theme.taglist_squares_unsel                     = theme.dir .. "/icons/new_square_unsel.png"
+theme.taglist_squares_sel_empty                 = theme.dir .. "/icons/new_square_sel.png"
 -- theme.taglist_squares_unsel_empty = nil
 -- theme.taglist_squares_resize = nil
 
@@ -315,11 +317,11 @@ theme.taglist_squares_unsel                     = theme.dir .. "/icons/square_un
 -- theme.taglist_shape_border_color_volatile = nil
 
 -- tasklist\
--- theme.tasklist_fg_normal = nil
+theme.tasklist_fg_normal = "#00BBEE"
 -- theme.tasklist_bg_normal = nil
 
-theme.tasklist_fg_focus = "#00CCFF"
-theme.tasklist_bg_focus = "#222222"
+theme.tasklist_fg_focus = "#FEFEFE"
+theme.tasklist_bg_focus = "#2E3436"
 
 -- theme.tasklist_fg_urgent = nil
 -- theme.tasklist_bg_urgent = nil
@@ -500,7 +502,8 @@ theme.max_useless_gap                           = 7
 -- theme.wibar_type = nil
 -- theme.wibar_width = nil
 theme.wibar_height = 20
--- theme.wibar_bg = nil
+-- theme.wibar_bg = "alpha"
+theme.wibar_bg = "#66666666"
 -- theme.wibar_bgimage = nil
 -- theme.wibar_fg = nil
 -- theme.wibar_shape = nil
@@ -690,110 +693,148 @@ theme.at_screen_connect = function (s)
     -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons(awful.util.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
-                           awful.button({ }, 4, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+                            awful.button({ }, 1, function () awful.layout.inc( 1) end),
+                            awful.button({ }, 3, function () awful.layout.inc(-1) end),
+                            awful.button({ }, 4, function () awful.layout.inc( 1) end),
+                            awful.button({ }, 5, function () awful.layout.inc(-1) end)))
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist (
-        s,
-        -- awful.widget.taglist.filter.all,
-        function (t)
-            return #t:clients() > 0 or t.selected or t.index < 6
-        end,
-        menu.taglist_buttons
+      s,
+      -- awful.widget.taglist.filter.all,
+      function (t)
+        return #t:clients() > 0 or t.selected or t.index < 6
+      end,
+      menu.taglist_buttons
     )
 
+
+    function container_tab (inc)
+      return function (cr, width, height, radius)
+        inc = 9
+
+        cr:move_to (0,0)
+        cr:line_to (width, 0)
+        cr:line_to (width - inc, height)
+        cr:line_to (inc, height)
+
+        cr:close_path()
+      end
+    end
+
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, menu.tasklist_buttons)
+    -- s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, menu.tasklist_buttons)
+    s.mytasklist = awful.widget.tasklist {
+      screen   = s,
+      filter   = awful.widget.tasklist.filter.currenttags,
+      buttons  = tasklist_buttons,
+      style    = {
+        -- shape_border_width = 1,
+        -- shape_border_color = '#777777',
+        shape  = container_tab(9),
+      },
+      layout   = {
+        spacing = 10,
+        -- spacing_widget = {
+        --   {
+        --     forced_width = 5,
+        --     shape        = gears.shape.circle,
+        --     widget       = wibox.widget.separator
+        --   },
+        --   valign = 'center',
+        --   halign = 'center',
+        --   widget = wibox.container.place,
+        -- },
+        layout  = wibox.layout.flex.horizontal
+      },
+      -- Notice that there is *NO* wibox.wibox prefix, it is a template,
+      -- not a widget instance.
+      widget_template = {
+        {
+          {
+            {
+              {
+                id     = 'icon_role',
+                widget = wibox.widget.imagebox,
+              },
+              margins = 2,
+              widget  = wibox.container.margin,
+            },
+            {
+              id     = 'text_role',
+              widget = wibox.widget.textbox,
+            },
+            layout = wibox.layout.fixed.horizontal,
+          },
+          left  = 10,
+          right = 10,
+          widget = wibox.container.margin
+        },
+        id     = 'background_role',
+        widget = wibox.container.background,
+      },
+    }
+
 
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
+      layout = wibox.layout.align.horizontal,
         { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            theme.launcher,
-            s.mytaglist,
+          layout = wibox.layout.fixed.horizontal,
+          -- theme.launcher,
+          {
+            widget = wibox.container.constraint,
+            forced_width = s.geometry.width/3.5,
+            {
+              widget = wibox.container.background,
+              bg = theme.bg_normal,
+              {
+                layout = wibox.layout.fixed.horizontal,
+                s.mytaglist,
+                wibox.container.margin (theme.widgets.mpd_widget, 3, 0),
+                wibox.container.margin (theme.widgets.pack_widget, 3, 3),
+                wibox.container.margin (theme.widgets.mail_widget, 3, 3),
+              }
+            }
+
+          },
+          {
+            widget = wibox.container.background,
+            bg = theme.bg_normal,
             s.mypromptbox,
+          },
+          separators.oblique_right(theme.bg_normal, "alpha"),
         },
-        s.mytasklist, -- Middle widget
+        wibox.container.margin (s.mytasklist, 10, 10),  -- Middle widget
         { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-
-            --------------------------------------------------------------------
-            arrow("alpha", theme.arrows.color[#theme.arrows.color]),
-            wibox.container.background(
-                wibox.container.margin (wibox.widget.systray (), 3, 3),
-                theme.arrows.color[#theme.arrows.color]),
-            --------------------------------------------------------------------
-
-            --------------------------------------------------------------------
-            arrow(theme.arrows.color[10], theme.arrows.color[9]),
-            wibox.container.background(
-                wibox.container.margin (theme.widgets.mpd_widget, 11, 3),
-                theme.arrows.color[9]),
-            --------------------------------------------------------------------
-
-            --------------------------------------------------------------------
-            arrow(theme.arrows.color[9], theme.arrows.color[8]),
-            wibox.container.background(
-                wibox.container.margin (theme.widgets.pack_widget, 11, 3),
-                theme.arrows.color[8]),
-            --------------------------------------------------------------------
-
-            --------------------------------------------------------------------
-            arrow(theme.arrows.color[8], theme.arrows.color[7]),
-            wibox.container.background(
-                wibox.container.margin (theme.widgets.mail_widget, 11, 3),
-                theme.arrows.color[7]),
-            --------------------------------------------------------------------
-
-            --------------------------------------------------------------------
-            arrow(theme.arrows.color[7], theme.arrows.color[6]),
-            wibox.container.background(
+          layout = wibox.layout.fixed.horizontal,
+          separators.oblique_left("alpha", theme.bg_normal),
+          {
+            widget = wibox.container.background,
+            bg = theme.bg_normal,
+            wibox.container.margin (wibox.widget.systray (), 3, 3),
+          },
+          {
+            widget = wibox.container.constraint,
+            forced_width = s.geometry.width/3.5,
+            {
+              widget = wibox.container.background,
+              bg = theme.bg_normal,
+              {
+                layout = wibox.layout.fixed.horizontal,
                 wibox.container.margin (theme.widgets.fs_widget, 3, 3),
-                theme.arrows.color[6]),
-            --------------------------------------------------------------------
-
-            --------------------------------------------------------------------
-            arrow(theme.arrows.color[6], theme.arrows.color[5]),
-            wibox.container.background(
                 wibox.container.margin (theme.widgets.mem_widget, 3, 3),
-                theme.arrows.color[5]),
-            --------------------------------------------------------------------
-
-            --------------------------------------------------------------------
-            arrow(theme.arrows.color[5], theme.arrows.color[4]),
-            wibox.container.background(
                 wibox.container.margin (theme.widgets.cpu_widget, 3, 3),
-                theme.arrows.color[4]),
-            --------------------------------------------------------------------
-
-            --------------------------------------------------------------------
-            arrow(theme.arrows.color[4], theme.arrows.color[3]),
-            wibox.container.background(
                 wibox.container.margin (theme.widgets.pulse_widget, 3, 3),
-                theme.arrows.color[3]),
-            --------------------------------------------------------------------
-
-            --------------------------------------------------------------------
-            arrow(theme.arrows.color[3], theme.arrows.color[2]),
-            wibox.container.background(
                 wibox.container.margin (theme.widgets.battery_widget, 3, 3),
-                theme.arrows.color[2]),
-            --------------------------------------------------------------------
+                theme.widgets.clock_widget,
+                s.mylayoutbox,
+              }
+            }
 
-            --------------------------------------------------------------------
-            arrow(theme.arrows.color[2], theme.arrows.color[1]),
-            wibox.container.background(theme.widgets.clock_widget, theme.arrows.color[1]),
-            arrow(theme.arrows.color[1], "alpha"),
-            --------------------------------------------------------------------
-
-            --------------------------------------------------------------------
-            s.mylayoutbox,
+          },
         },
     }
 end
