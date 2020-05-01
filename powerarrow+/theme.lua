@@ -580,7 +580,9 @@ theme.widgets.clock_widget = clock.factory ({}, theme).widget
 -------------------- {{{ Battery }}} -------------------------------------------
 
 local battery = require ("cuddly.widgets.wibox.battery")
-theme.widgets.battery_widget = battery.factory ({}, theme).widget
+theme.widgets.battery_widget = battery.factory ({
+    notify_interval = 600
+                                                }, theme).widget
 
 -------------------- {{{ End Battery }}} ---------------------------------------
 
