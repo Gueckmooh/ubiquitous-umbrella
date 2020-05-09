@@ -14,6 +14,8 @@ local arrow      = separators.arrow_left
 local client     = client
 local vars       = require ("config.vars")
 
+local gen_widget_bar = require ("ubiquitous.util.wibox_utils").gen_widget_bar
+
 local theme = {}
 
 
@@ -27,22 +29,22 @@ theme.wallpaper = util.get_wall(theme.dir .. "/wallpapers")
 
 -- {{{ Table of layouts to cover with awful.layout.inc, order matters.
 theme.layouts = {
-    awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    awful.layout.suit.floating,
-    -- awful.layout.suit.tile.bottom,
-    -- awful.layout.suit.tile.top,
-    -- awful.layout.suit.fair,
-    -- awful.layout.suit.fair.horizontal,
-    -- awful.layout.suit.spiral,
-    -- awful.layout.suit.spiral.dwindle,
-    -- awful.layout.suit.max,
-    -- awful.layout.suit.max.fullscreen,
-    -- awful.layout.suit.magnifier,
-    -- awful.layout.suit.corner.nw,
-    -- awful.layout.suit.corner.ne,
-    -- awful.layout.suit.corner.sw,
-    -- awful.layout.suit.corner.se,
+  awful.layout.suit.tile,
+  awful.layout.suit.tile.left,
+  awful.layout.suit.floating,
+  -- awful.layout.suit.tile.bottom,
+  -- awful.layout.suit.tile.top,
+  -- awful.layout.suit.fair,
+  -- awful.layout.suit.fair.horizontal,
+  -- awful.layout.suit.spiral,
+  -- awful.layout.suit.spiral.dwindle,
+  -- awful.layout.suit.max,
+  -- awful.layout.suit.max.fullscreen,
+  -- awful.layout.suit.magnifier,
+  -- awful.layout.suit.corner.nw,
+  -- awful.layout.suit.corner.ne,
+  -- awful.layout.suit.corner.sw,
+  -- awful.layout.suit.corner.se,
 }
 -- }}}
 
@@ -50,9 +52,9 @@ theme.default_layout = theme.layouts[1]
 awful.util.default_layout = theme.layouts[1]
 
 awful.util.tags =
-    {
-        "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
-    }
+  {
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
+  }
 
 awful.layout.layouts = theme.layouts
 
@@ -356,7 +358,7 @@ theme.tasklist_plain_task_name                  = true
 
 
 --[[
-    Titlebar
+  Titlebar
 --]]
 
 -- theme.titlebar_fg_normal = nil
@@ -546,29 +548,30 @@ theme.arrows.color[#theme.arrows.color + 1] = "alpha"
 theme.arrows.color[#theme.arrows.color + 1] =  "#343434"
 
 --[[
-__        ___ _
-\ \      / (_) |__   __ _ _ __
- \ \ /\ / /| | '_ \ / _` | '__|
+  __        ___ _
+  \ \      / (_) |__   __ _ _ __
+  \ \ /\ / /| | '_ \ / _` | '__|
   \ V  V / | | |_) | (_| | |
-   \_/\_/  |_|_.__/ \__,_|_|
+  \_/\_/  |_|_.__/ \__,_|_|
 
 --]]
 
 theme.launcher =
-    awful.widget.launcher({
-            image = theme.awesome_icon,
-            menu = menu.mainmenu
-    })
+  awful.widget.launcher({
+      image = theme.awesome_icon,
+      menu = menu.mainmenu
+  })
 
 --[[
-__        ___     _            _
-\ \      / (_) __| | __ _  ___| |_ ___
- \ \ /\ / /| |/ _` |/ _` |/ _ \ __/ __|
+  __        ___     _            _
+  \ \      / (_) __| | __ _  ___| |_ ___
+  \ \ /\ / /| |/ _` |/ _` |/ _ \ __/ __|
   \ V  V / | | (_| | (_| |  __/ |_\__ \
-   \_/\_/  |_|\__,_|\__, |\___|\__|___/
-                    |___/
+  \_/\_/  |_|\__,_|\__, |\___|\__|___/
+  |___/
 --]]
 theme.widgets = {}
+
 
 -------------------- {{{ Clock }}} ---------------------------------------------
 
@@ -585,6 +588,15 @@ theme.widgets.battery_widget = battery.factory ({
                                                 }, theme).widget
 
 -------------------- {{{ End Battery }}} ---------------------------------------
+
+
+-------------------- {{{ Bluetooth }}} -----------------------------------------
+
+-- local bluetooth = require ("cuddly.widgets.wibox.bluetooth")
+-- theme.widgets.bluetooth_widget = bluetooth.factory ().widget
+
+-------------------- {{{ End Bluetooth }}} -------------------------------------
+
 
 -------------------- {{{ Pulse Audio }}} ---------------------------------------
 
@@ -646,7 +658,7 @@ theme.widgets.mail_widget = notmuch.factory ({lmax = 50}, theme).widget
 local mpd = require ("cuddly.widgets.wibox.mpd")
 theme.widgets.mpd_widget = mpd.factory (
   {
-    music_dir = os.getenv("HOME") .. "/Musique",
+    music_dir = os.getenv("HOME") .. "/Music",
     port = "6601"
   }, theme).widget
 
@@ -676,142 +688,212 @@ translate.create_widget (theme)
 function theme.set_wallpaper(s)
   -- Wallpaper
   if theme.wallpaper then
-        local wallpaper = theme.wallpaper
-        -- If wallpaper is a function, call it with the screen
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, true)
+    local wallpaper = theme.wallpaper
+    -- If wallpaper is a function, call it with the screen
+    if type(wallpaper) == "function" then
+      wallpaper = wallpaper(s)
     end
+    gears.wallpaper.maximized(wallpaper, s, true)
+  end
 end
 
 theme.at_screen_connect = function (s)
-    -- Wallpaper
-    theme.set_wallpaper(s)
-    s.quake = lain.util.quake({ app = vars.terminal, screen = s })
+  -- Wallpaper
+  theme.set_wallpaper(s)
+  s.quake = lain.util.quake({ app = vars.terminal, screen = s })
 
-    -- Each screen has its own tag table.
-    awful.tag(awful.util.tags, s, theme.default_layout)
+  -- Each screen has its own tag table.
+  awful.tag(awful.util.tags, s, theme.default_layout)
 
-    -- Create a promptbox for each screen
-    s.mypromptbox = awful.widget.prompt()
-    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
-    -- We need one layoutbox per screen.
-    s.mylayoutbox = awful.widget.layoutbox(s)
-    s.mylayoutbox:buttons(awful.util.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
-                           awful.button({ }, 4, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(-1) end)))
-    -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist (
-        s,
-        -- awful.widget.taglist.filter.all,
-        function (t)
-            return #t:clients() > 0 or t.selected or t.index < 6
-        end,
-        menu.taglist_buttons
-    )
+  -- Create a promptbox for each screen
+  s.mypromptbox = awful.widget.prompt()
+  -- Create an imagebox widget which will contains an icon indicating which layout we're using.
+  -- We need one layoutbox per screen.
+  s.mylayoutbox = awful.widget.layoutbox(s)
+  s.mylayoutbox:buttons(awful.util.table.join(
+                          awful.button({ }, 1, function () awful.layout.inc( 1) end),
+                          awful.button({ }, 3, function () awful.layout.inc(-1) end),
+                          awful.button({ }, 4, function () awful.layout.inc( 1) end),
+                          awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+  -- Create a taglist widget
+  s.mytaglist = awful.widget.taglist (
+    s,
+    -- awful.widget.taglist.filter.all,
+    function (t)
+      return #t:clients() > 0 or t.selected or t.index < 6
+    end,
+    menu.taglist_buttons
+  )
 
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, menu.tasklist_buttons)
+  -- Create a tasklist widget
+  s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, menu.tasklist_buttons)
 
-    -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s })
+  -- Create the wibox
+  s.mywibox = awful.wibar({ position = "top", screen = s })
 
-    -- Add widgets to the wibox
-    s.mywibox:setup {
-      layout = wibox.layout.align.horizontal,
-      { -- Left widgets
-        layout = wibox.layout.fixed.horizontal,
-        -- theme.launcher,
-        s.mytaglist,
-        s.mypromptbox,
-      },
-      s.mytasklist, -- Middle widget
-      { -- Right widgets
-        layout = wibox.layout.fixed.horizontal,
 
-        --------------------------------------------------------------------
-        arrow("alpha", theme.arrows.color[#theme.arrows.color]),
-        wibox.container.background(
-          wibox.container.margin (wibox.widget.systray (), 3, 3),
-            theme.arrows.color[#theme.arrows.color]),
-          --------------------------------------------------------------------
+  -- Add widgets to the wibox
+  s.mywibox:setup {
+    layout = wibox.layout.align.horizontal,
+    { -- Left widgets
+      layout = wibox.layout.fixed.horizontal,
+      -- theme.launcher,
+      s.mytaglist,
+      s.mypromptbox,
+    },
+    s.mytasklist, -- Middle widget
+    -- { -- Right widgets
+    --   layout = wibox.layout.fixed.horizontal,
 
-          --------------------------------------------------------------------
-        arrow(theme.arrows.color[10], theme.arrows.color[9]),
-        wibox.container.background(
-            wibox.container.margin (theme.widgets.mpd_widget, 11, 3),
-            theme.arrows.color[9]),
-          --------------------------------------------------------------------
+    --   --------------------------------------------------------------------
+    --   arrow(theme.arrows.color[2], theme.arrows.color[1]),
+    --   wibox.container.background(theme.widgets.bluetooth_widget, theme.arrows.color[1]),
+    --   arrow(theme.arrows.color[1], "alpha"),
+    --   --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          arrow(theme.arrows.color[9], theme.arrows.color[8]),
-          wibox.container.background(
-            wibox.container.margin (theme.widgets.pack_widget, 11, 3),
-            theme.arrows.color[8]),
-          --------------------------------------------------------------------
+    --   --------------------------------------------------------------------
+    --   arrow("alpha", theme.arrows.color[#theme.arrows.color]),
+    --   wibox.container.background(
+    --     wibox.container.margin (wibox.widget.systray (), 3, 3),
+    --     theme.arrows.color[#theme.arrows.color]),
+    --   --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          arrow(theme.arrows.color[8], theme.arrows.color[7]),
-          wibox.container.background(
-            wibox.container.margin (theme.widgets.mail_widget, 11, 3),
-            theme.arrows.color[7]),
-          --------------------------------------------------------------------
+    --   --------------------------------------------------------------------
+    --   arrow(theme.arrows.color[10], theme.arrows.color[9]),
+    --   wibox.container.background(
+    --       wibox.container.margin (theme.widgets.mpd_widget, 11, 3),
+    --       theme.arrows.color[9]),
+    --     --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          arrow(theme.arrows.color[7], theme.arrows.color[6]),
-          wibox.container.background(
-            wibox.container.margin (theme.widgets.fs_widget, 3, 3),
-            theme.arrows.color[6]),
-          --------------------------------------------------------------------
+    --     --------------------------------------------------------------------
+    --     arrow(theme.arrows.color[9], theme.arrows.color[8]),
+    --     wibox.container.background(
+    --       wibox.container.margin (theme.widgets.pack_widget, 11, 3),
+    --       theme.arrows.color[8]),
+    --     --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          arrow(theme.arrows.color[6], theme.arrows.color[5]),
-          wibox.container.background(
-            wibox.container.margin (theme.widgets.mem_widget, 3, 3),
-            theme.arrows.color[5]),
-          --------------------------------------------------------------------
+    --     --------------------------------------------------------------------
+    --     arrow(theme.arrows.color[8], theme.arrows.color[7]),
+    --     wibox.container.background(
+    --       wibox.container.margin (theme.widgets.mail_widget, 11, 3),
+    --       theme.arrows.color[7]),
+    --     --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          arrow(theme.arrows.color[5], theme.arrows.color[4]),
-          wibox.container.background(
-            wibox.container.margin (theme.widgets.cpu_widget, 3, 3),
-            theme.arrows.color[4]),
-          --------------------------------------------------------------------
+    --     --------------------------------------------------------------------
+    --     arrow(theme.arrows.color[7], theme.arrows.color[6]),
+    --     wibox.container.background(
+    --       wibox.container.margin (theme.widgets.fs_widget, 3, 3),
+    --       theme.arrows.color[6]),
+    --     --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          -- arrow(theme.arrows.color[5], theme.arrows.color[4]),
-          -- wibox.container.background(
-          --   wibox.container.margin (todo_widget(), 8, 8),
-          --   theme.arrows.color[4]),
-          --------------------------------------------------------------------
+    --     --------------------------------------------------------------------
+    --     arrow(theme.arrows.color[6], theme.arrows.color[5]),
+    --     wibox.container.background(
+    --       wibox.container.margin (theme.widgets.mem_widget, 3, 3),
+    --       theme.arrows.color[5]),
+    --     --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          arrow(theme.arrows.color[4], theme.arrows.color[3]),
-          wibox.container.background(
-            wibox.container.margin (theme.widgets.pulse_widget, 3, 3),
-            theme.arrows.color[3]),
-          --------------------------------------------------------------------
+    --     --------------------------------------------------------------------
+    --     arrow(theme.arrows.color[5], theme.arrows.color[4]),
+    --     wibox.container.background(
+    --       wibox.container.margin (theme.widgets.cpu_widget, 3, 3),
+    --       theme.arrows.color[4]),
+    --     --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          arrow(theme.arrows.color[3], theme.arrows.color[2]),
-          wibox.container.background(
-            wibox.container.margin (theme.widgets.battery_widget, 3, 3),
-            theme.arrows.color[2]),
-          --------------------------------------------------------------------
+    --     --------------------------------------------------------------------
+    --     -- arrow(theme.arrows.color[5], theme.arrows.color[4]),
+    --     -- wibox.container.background(
+    --     --   wibox.container.margin (todo_widget(), 8, 8),
+    --     --   theme.arrows.color[4]),
+    --     --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          arrow(theme.arrows.color[2], theme.arrows.color[1]),
-          wibox.container.background(theme.widgets.clock_widget, theme.arrows.color[1]),
-          arrow(theme.arrows.color[1], "alpha"),
-          --------------------------------------------------------------------
+    --     --------------------------------------------------------------------
+    --     arrow(theme.arrows.color[4], theme.arrows.color[3]),
+    --     wibox.container.background(
+    --       wibox.container.margin (theme.widgets.pulse_widget, 3, 3),
+    --       theme.arrows.color[3]),
+    --     --------------------------------------------------------------------
 
-          --------------------------------------------------------------------
-          s.mylayoutbox,
-        },
-      }
+    --     --------------------------------------------------------------------
+    --     arrow(theme.arrows.color[3], theme.arrows.color[2]),
+    --     wibox.container.background(
+    --       wibox.container.margin (theme.widgets.battery_widget, 3, 3),
+    --       theme.arrows.color[2]),
+    --     --------------------------------------------------------------------
+
+    --     --------------------------------------------------------------------
+    --     arrow(theme.arrows.color[2], theme.arrows.color[1]),
+    --     wibox.container.background(theme.widgets.clock_widget, theme.arrows.color[1]),
+    --     arrow(theme.arrows.color[1], "alpha"),
+    --     --------------------------------------------------------------------
+
+    --     --------------------------------------------------------------------
+    --     s.mylayoutbox,
+    -- }
+    -- {layout = wibox.layout.fixed.horizontal,
+    --  s.mylayoutbox},
+
+    gen_widget_bar(
+      {
+        separator = arrow,
+        left_sep = true,
+        widgets = {
+          {                     -- SYSTRAY
+            widget = wibox.widget.systray (),
+            color = theme.arrows.color[10],
+            left = 3, right = 3
+          },
+          {                     -- MPD
+            widget = theme.widgets.mpd_widget,
+            color = theme.arrows.color[9],
+            left = 11, right = 3
+          },
+          {                     -- PACMAN
+            widget = theme.widgets.pack_widget,
+            color = theme.arrows.color[8],
+            left = 11, right = 3
+          },
+          {                     -- MAIL
+            widget = theme.widgets.mail_widget,
+            color = theme.arrows.color[7],
+            left = 11, right = 3
+          },
+          {                     -- FS
+            widget = theme.widgets.fs_widget,
+            color = theme.arrows.color[6],
+            left = 3, right = 3
+          },
+          {                     -- MEM
+            widget = theme.widgets.mem_widget,
+            color = theme.arrows.color[5],
+            left = 3, right = 3
+          },
+          {                     -- CPU
+            widget = theme.widgets.cpu_widget,
+            color = theme.arrows.color[4],
+            left = 3, right = 3
+          },
+          {                     -- PULSE
+            widget = theme.widgets.pulse_widget,
+            color = theme.arrows.color[3],
+            left = 3, right = 3
+          },
+          {
+            widget = theme.widgets.battery_widget,
+            color = theme.arrows.color[2],
+            left = 3, right = 3
+          },
+          {
+            widget = theme.widgets.clock_widget,
+            color = theme.arrows.color[1],
+          },
+          {
+            widget = s.mylayoutbox,
+          },
+      }}
+
+    ),
+  }
 end
 
 return theme
