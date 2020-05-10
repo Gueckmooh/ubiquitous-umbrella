@@ -177,13 +177,13 @@ theme.layout_floating                           = theme.dir .. "/icons/layouts/f
 
 -- menu\
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
--- theme.menu_font = nil
-theme.menu_height                               = 16
-theme.menu_width                                = 140
+theme.menu_font = "xos4 Terminus 11"
+theme.menu_height                               = 40
+theme.menu_width                                = 300
 -- theme.menu_border_color = nil
 -- theme.menu_border_width = nil
 -- theme.menu_fg_focus = nil
--- theme.menu_bg_focus = nil
+theme.menu_bg_focus = "#343434"
 -- theme.menu_fg_normal = nil
 -- theme.menu_bg_normal = nil
 -- theme.menu_submenu = nil
@@ -275,7 +275,7 @@ theme.menu_width                                = 140
 -- theme.systray_icon_spacing = nil
 
 -- taglist\
-theme.taglist_fg_focus    = "#00CCFF"
+  theme.taglist_fg_focus    = "#00CCFF"
 -- theme.taglist_bg_focus = nil
 
 -- theme.taglist_fg_urgent   = nil
@@ -587,8 +587,9 @@ theme.widgets.battery_widget = battery.factory ({
 
 -------------------- {{{ Bluetooth }}} -----------------------------------------
 
--- local bluetooth = require ("cuddly.widgets.wibox.bluetooth")
--- theme.widgets.bluetooth_widget = bluetooth.factory ().widget
+local bluetooth = require ("cuddly.widgets.wibox.bluetooth")
+theme.widgets.bluetooth_widget = bluetooth.factory ({bg_focus = "#343434"},
+  theme).widget
 
 -------------------- {{{ End Bluetooth }}} -------------------------------------
 
@@ -848,6 +849,11 @@ theme.at_screen_connect = function (s)
             color = theme.arrows.color[8],
             left = 11, right = 3
           },
+          {
+            widget = theme.widgets.bluetooth_widget,
+            left = 3,
+            right = 3
+          },
           {                     -- MAIL
             widget = theme.widgets.mail_widget,
             color = theme.arrows.color[7],
@@ -873,12 +879,12 @@ theme.at_screen_connect = function (s)
             color = theme.arrows.color[3],
             left = 3, right = 3
           },
-          {
+          {                     -- BATTERY
             widget = theme.widgets.battery_widget,
             color = theme.arrows.color[2],
             left = 3, right = 3
           },
-          {
+          {                     -- CLOCK
             widget = theme.widgets.clock_widget,
             color = theme.arrows.color[1],
           },
