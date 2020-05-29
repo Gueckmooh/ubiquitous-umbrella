@@ -662,7 +662,7 @@ theme.widgets.mpd_widget = mpd.factory (
 
 -------------------- {{{ TODO }}} ----------------------------------------------
 
-local todo_widget = require("cuddly.widgets.wibox.todo")
+-- local todo_widget = require("cuddly.widgets.wibox.todo")
 
 -------------------- {{{ End TODO }}} ------------------------------------------
 
