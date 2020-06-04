@@ -655,7 +655,8 @@ local mpd = require ("cuddly.widgets.wibox.mpd")
 theme.widgets.mpd_widget = mpd.factory (
   {
     music_dir = os.getenv("HOME") .. "/Music",
-    port = "6601"
+    port = "6601",
+    control_mpv = true
   }, theme).widget
 
 -------------------- {{{ End MPD }}} ------------------------------------------
