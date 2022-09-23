@@ -489,8 +489,8 @@ theme.titlebar_close_button_focus           = theme.dir .. "/icons/titlebar/clos
 -- theme.tooltip_align = nil
 
 -- useless\
-theme.useless_gap                               = 7
-theme.max_useless_gap                           = 7
+theme.useless_gap                               = 6
+theme.max_useless_gap                           = 6
 
 -- wibar\
 -- theme.wibar_stretch = nil
@@ -606,8 +606,8 @@ theme.widgets.pulse_widget = pulse.factory ({}, theme).widget
 
 -------------------- {{{ Heat }}} ----------------------------------------------
 
-local temp = require ("widget.temperature")
-theme.widgets.temp_widget = temp.get_widget (theme)
+-- local temp = require ("widget.temperature")
+-- theme.widgets.temp_widget = temp.get_widget (theme)
 
 -------------------- {{{ End Heat }}} ------------------------------------------
 
@@ -654,9 +654,9 @@ theme.widgets.mail_widget = notmuch.factory ({lmax = 50}, theme).widget
 local mpd = require ("cuddly.widgets.wibox.mpd")
 theme.widgets.mpd_widget = mpd.factory (
   {
-    music_dir = os.getenv("HOME") .. "/Music",
     port = "6601",
-    control_mpv = true
+    control_mpv = true,
+    find_cover = true,
   }, theme).widget
 
 -------------------- {{{ End MPD }}} ------------------------------------------
